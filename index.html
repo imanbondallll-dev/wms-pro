@@ -1,117 +1,95 @@
-```html
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 
-  <!-- Responsive -->
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-
-  <!-- SEO / Browser -->
-  <meta
-    name="description"
-    content="WMS Pro - Warehouse Management System"
-  >
+  <meta name="description" content="WMS Pro - Warehouse Management System">
   <meta name="theme-color" content="#16a34a">
   <meta name="color-scheme" content="light">
 
   <title>WMS Pro | Warehouse Management System</title>
 
   <style>
-    /* =========================================================
-       RESET
-       ========================================================= */
+    /* =========================
+       GLOBAL RESET
+    ========================= */
 
-    *,
-    *::before,
-    *::after {
+    * {
       box-sizing: border-box;
-    }
-
-    html,
-    body {
-      width: 100%;
-      height: 100%;
       margin: 0;
       padding: 0;
     }
 
-    body {
+    html {
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      background: #f5f7f8;
-      font-family:
-        Inter,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
       color: #1f2937;
+      background: #f5f7f8;
+      overscroll-behavior: none;
     }
 
     button {
-      font: inherit;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-
-    /* =========================================================
-       APP CONTAINER
-       ========================================================= */
+    /* =========================
+       MAIN APPLICATION
+    ========================= */
 
     #app {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
+      height: 100dvh;
       overflow: hidden;
-      background: #f5f7f8;
+      background: #fff;
     }
-
-
-    /* =========================================================
-       WMS IFRAME
-       ========================================================= */
 
     #wmsFrame {
       position: absolute;
       inset: 0;
-
       display: block;
-
       width: 100%;
       height: 100%;
-
-      margin: 0;
-      padding: 0;
-
-      border: 0;
-      outline: 0;
-
-      background: #ffffff;
-
+      height: 100dvh;
+      border: none;
+      outline: none;
+      background: #fff;
       opacity: 0;
-
-      transition:
-        opacity 0.25s ease;
-
+      transition: opacity .25s ease;
       z-index: 10;
+
+      /* Mobile browser compatibility */
+      -webkit-overflow-scrolling: touch;
     }
 
     #wmsFrame.loaded {
       opacity: 1;
     }
 
-
-    /* =========================================================
+    /* =========================
        LOADING SCREEN
-       ========================================================= */
+    ========================= */
 
     #loading {
       position: fixed;
       inset: 0;
-
       z-index: 1000;
 
       display: flex;
@@ -120,18 +98,19 @@
 
       width: 100%;
       height: 100%;
+      height: 100dvh;
+
+      padding:
+        max(20px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(20px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
 
       background:
-        linear-gradient(
-          135deg,
-          #ffffff 0%,
-          #f8fafc 50%,
-          #f0fdf4 100%
-        );
+        radial-gradient(circle at top right, #dcfce7 0%, transparent 40%),
+        linear-gradient(135deg, #ffffff, #f1f5f9);
 
-      transition:
-        opacity 0.3s ease,
-        visibility 0.3s ease;
+      transition: opacity .3s ease, visibility .3s ease;
     }
 
     #loading.hidden {
@@ -141,195 +120,164 @@
     }
 
     .loading-container {
-      width: min(420px, calc(100% - 40px));
-      padding: 36px 30px;
+      width: min(100%, 400px);
+      padding: clamp(24px, 5vw, 38px);
 
       text-align: center;
 
-      background: rgba(255, 255, 255, 0.96);
-
+      background: rgba(255,255,255,.97);
       border: 1px solid #e5e7eb;
-      border-radius: 18px;
+      border-radius: 20px;
 
-      box-shadow:
-        0 20px 50px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 60px rgba(15,23,42,.08);
     }
 
-
-    /* =========================================================
-       LOGO
-       ========================================================= */
+    /* =========================
+       BRAND
+    ========================= */
 
     .brand {
       display: flex;
-      align-items: center;
       justify-content: center;
-
+      align-items: center;
       gap: 12px;
-
-      margin-bottom: 24px;
+      margin-bottom: 25px;
     }
 
     .brand-icon {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+
       display: flex;
       align-items: center;
       justify-content: center;
 
-      width: 48px;
-      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg,#16a34a,#15803d);
 
-      border-radius: 12px;
+      color: white;
+      font-size: 25px;
+      font-weight: 900;
 
-      background: #16a34a;
-
-      color: #ffffff;
-
-      font-size: 24px;
-      font-weight: 800;
-
-      box-shadow:
-        0 8px 20px rgba(22, 163, 74, 0.22);
+      box-shadow: 0 8px 20px rgba(22,163,74,.22);
     }
 
     .brand-text {
       text-align: left;
+      min-width: 0;
     }
 
     .brand-title {
-      margin: 0;
-
-      font-size: 20px;
+      font-size: clamp(19px, 4vw, 22px);
       font-weight: 800;
-
-      letter-spacing: -0.4px;
-
+      letter-spacing: -.5px;
       color: #111827;
     }
 
     .brand-subtitle {
-      margin-top: 3px;
-
+      margin-top: 4px;
       font-size: 12px;
-      font-weight: 500;
-
       color: #6b7280;
     }
 
-
-    /* =========================================================
+    /* =========================
        SPINNER
-       ========================================================= */
+    ========================= */
 
     .spinner-wrapper {
       display: flex;
       justify-content: center;
-
-      margin: 10px 0 18px;
+      margin: 12px 0 20px;
     }
 
     .spinner {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
 
       border: 4px solid #dcfce7;
       border-top-color: #16a34a;
 
       border-radius: 50%;
-
-      animation:
-        wmsSpin 0.8s linear infinite;
+      animation: spin .8s linear infinite;
     }
 
-    @keyframes wmsSpin {
-      to {
-        transform: rotate(360deg);
-      }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-
-    /* =========================================================
+    /* =========================
        LOADING TEXT
-       ========================================================= */
+    ========================= */
 
     .loading-title {
-      margin: 0;
-
       font-size: 16px;
-      font-weight: 700;
-
+      font-weight: 750;
       color: #111827;
     }
 
     .loading-text {
-      margin: 8px 0 0;
-
+      margin-top: 9px;
       font-size: 13px;
-      line-height: 1.6;
-
+      line-height: 1.7;
       color: #6b7280;
     }
 
-
-    /* =========================================================
+    /* =========================
        PROGRESS
-       ========================================================= */
+    ========================= */
 
     .progress {
       width: 100%;
-      height: 4px;
-
-      margin-top: 22px;
-
+      height: 5px;
+      margin-top: 23px;
       overflow: hidden;
-
-      border-radius: 99px;
-
       background: #e5e7eb;
+      border-radius: 50px;
     }
 
     .progress-bar {
       width: 35%;
       height: 100%;
-
-      border-radius: inherit;
-
       background: #16a34a;
-
-      animation:
-        loadingProgress 1.5s ease-in-out infinite;
+      border-radius: inherit;
+      animation: progress 1.5s ease-in-out infinite;
     }
 
-    @keyframes loadingProgress {
-      0% {
-        transform: translateX(-120%);
-      }
-
-      50% {
-        transform: translateX(150%);
-      }
-
-      100% {
-        transform: translateX(320%);
-      }
+    @keyframes progress {
+      0% { transform: translateX(-120%); }
+      50% { transform: translateX(150%); }
+      100% { transform: translateX(320%); }
     }
 
+    .system-status {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
 
-    /* =========================================================
+    /* =========================
        ERROR SCREEN
-       ========================================================= */
+    ========================= */
 
     #errorScreen {
       position: fixed;
       inset: 0;
-
       z-index: 2000;
 
       display: none;
-
       align-items: center;
       justify-content: center;
 
-      padding: 20px;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+
+      padding:
+        max(20px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(20px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
 
       background: #f8fafc;
     }
@@ -339,97 +287,75 @@
     }
 
     .error-container {
-      width: min(500px, 100%);
-
-      padding: 36px 30px;
+      width: min(100%, 440px);
+      padding: clamp(24px, 5vw, 36px);
 
       text-align: center;
 
-      background: #ffffff;
-
+      background: white;
       border: 1px solid #e5e7eb;
-      border-radius: 18px;
+      border-radius: 20px;
 
-      box-shadow:
-        0 20px 50px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 20px 50px rgba(15,23,42,.08);
     }
 
     .error-icon {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto 18px;
+
       display: flex;
       align-items: center;
       justify-content: center;
 
-      width: 58px;
-      height: 58px;
-
-      margin: 0 auto 18px;
-
       border-radius: 50%;
-
       background: #fef2f2;
 
       color: #dc2626;
-
       font-size: 25px;
       font-weight: 800;
     }
 
     .error-title {
-      margin: 0;
-
       font-size: 20px;
       font-weight: 800;
-
       color: #111827;
     }
 
     .error-text {
-      margin: 10px 0 22px;
-
+      margin: 12px 0 23px;
       font-size: 14px;
       line-height: 1.7;
-
       color: #6b7280;
     }
 
     .error-actions {
       display: flex;
-      flex-wrap: wrap;
-
       justify-content: center;
-
       gap: 10px;
     }
 
     .btn {
-      min-height: 42px;
+      min-height: 46px;
+      padding: 0 20px;
 
-      padding: 0 18px;
-
-      border: 0;
-      border-radius: 9px;
-
-      cursor: pointer;
+      border: none;
+      border-radius: 10px;
 
       font-size: 14px;
       font-weight: 700;
 
-      transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
-        background 0.15s ease;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
+    .btn:active {
+      transform: scale(.97);
     }
 
     .btn-primary {
+      color: white;
       background: #16a34a;
-      color: #ffffff;
-
-      box-shadow:
-        0 6px 16px rgba(22, 163, 74, 0.18);
     }
 
     .btn-primary:hover {
@@ -437,115 +363,156 @@
     }
 
     .btn-secondary {
-      background: #f3f4f6;
       color: #374151;
+      background: #f3f4f6;
     }
 
     .btn-secondary:hover {
       background: #e5e7eb;
     }
 
+    /* =========================
+       TABLET
+    ========================= */
 
-    /* =========================================================
-       FOOTER / STATUS
-       ========================================================= */
-
-    .system-status {
-      margin-top: 18px;
-
-      font-size: 11px;
-
-      color: #9ca3af;
-    }
-
-
-    /* =========================================================
-       MOBILE
-       ========================================================= */
-
-    @media (max-width: 640px) {
-
+    @media (min-width: 641px) and (max-width: 1024px) {
       .loading-container,
       .error-container {
-        padding: 28px 20px;
-        border-radius: 15px;
+        width: min(90%, 460px);
+      }
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 640px) {
+      .loading-container,
+      .error-container {
+        width: 100%;
+        max-width: 380px;
+        padding: 25px 20px;
+        border-radius: 16px;
       }
 
-      .brand-title {
-        font-size: 18px;
+      .brand {
+        gap: 10px;
       }
 
       .brand-icon {
         width: 44px;
         height: 44px;
-        font-size: 21px;
+        font-size: 22px;
+      }
+
+      .brand-subtitle {
+        font-size: 11px;
+      }
+
+      .error-title {
+        font-size: 18px;
       }
 
       .error-actions {
         flex-direction: column;
+        width: 100%;
       }
 
       .btn {
         width: 100%;
+        min-height: 48px;
       }
     }
 
+    /* =========================
+       VERY SMALL MOBILE
+    ========================= */
 
-    /* =========================================================
-       REDUCED MOTION
-       ========================================================= */
+    @media (max-width: 360px) {
+      .loading-container,
+      .error-container {
+        padding: 22px 16px;
+      }
+
+      .loading-text,
+      .error-text {
+        font-size: 12px;
+      }
+
+      .brand-title {
+        font-size: 18px;
+      }
+    }
+
+    /* =========================
+       LANDSCAPE MOBILE
+    ========================= */
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      #loading,
+      #errorScreen {
+        overflow-y: auto;
+        align-items: flex-start;
+      }
+
+      .loading-container,
+      .error-container {
+        margin: auto;
+        padding: 18px 24px;
+      }
+
+      .brand {
+        margin-bottom: 12px;
+      }
+
+      .spinner-wrapper {
+        margin: 8px 0;
+      }
+
+      .system-status {
+        margin-top: 10px;
+      }
+    }
+
+    /* =========================
+       ACCESSIBILITY
+    ========================= */
 
     @media (prefers-reduced-motion: reduce) {
-
       *,
       *::before,
       *::after {
-        animation-duration: 0.001ms !important;
+        animation-duration: .001ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
+        transition-duration: .001ms !important;
       }
     }
   </style>
 </head>
 
-
 <body>
 
   <div id="app">
 
-    <!-- =======================================================
-         LOADING
-         ======================================================= -->
+    <!-- LOADING -->
 
     <div id="loading">
-
       <div class="loading-container">
 
         <div class="brand">
-
-          <div class="brand-icon">
-            W
-          </div>
+          <div class="brand-icon">W</div>
 
           <div class="brand-text">
-
-            <h1 class="brand-title">
-              WMS Pro
-            </h1>
-
+            <h1 class="brand-title">WMS Pro</h1>
             <div class="brand-subtitle">
               Warehouse Management System
             </div>
-
           </div>
-
         </div>
-
 
         <div class="spinner-wrapper">
           <div class="spinner"></div>
         </div>
-
 
         <h2 class="loading-title">
           Memuat sistem...
@@ -556,48 +523,36 @@
           Mohon tunggu sebentar.
         </p>
 
-
         <div class="progress">
           <div class="progress-bar"></div>
         </div>
-
 
         <div class="system-status">
           WMS Pro • Production
         </div>
 
       </div>
-
     </div>
 
-
-    <!-- =======================================================
-         WMS APPLICATION
-         ======================================================= -->
+    <!-- MAIN WMS -->
 
     <iframe
       id="wmsFrame"
-      title="WMS Pro - Warehouse Management System"
-src="https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDVNonVPzbzSlkzTKZmuWTJYeK-hN4ay56YLw/exec"
-
+      title="WMS Pro Warehouse Management System"
+      src="https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDVNonVPzbzSlkzTKZmuWTJYeK-hN4ay56YLw/exec"
       allow="fullscreen"
       allowfullscreen
       loading="eager"
       referrerpolicy="strict-origin-when-cross-origin">
     </iframe>
 
-
-    <!-- =======================================================
-         ERROR SCREEN
-         ======================================================= -->
+    <!-- ERROR -->
 
     <div id="errorScreen">
 
       <div class="error-container">
 
-        <div class="error-icon">
-          !
-        </div>
+        <div class="error-icon">!</div>
 
         <h2 class="error-title">
           WMS Tidak Dapat Dimuat
@@ -605,30 +560,28 @@ src="https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDV
 
         <p class="error-text">
           Sistem WMS belum berhasil terhubung.
-          Periksa koneksi internet atau pastikan deployment
-          Google Apps Script masih aktif.
+          Periksa koneksi internet atau pastikan
+          deployment Google Apps Script masih aktif.
         </p>
 
         <div class="error-actions">
 
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="retryButton">
+          <button class="btn btn-primary"
+                  id="retryButton"
+                  type="button">
             Muat Ulang
           </button>
 
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="openButton">
+          <button class="btn btn-secondary"
+                  id="openButton"
+                  type="button">
             Buka WMS
           </button>
 
         </div>
 
         <div class="system-status">
-          WMS Pro • Connection Error
+          WMS Pro • Connection Status
         </div>
 
       </div>
@@ -637,180 +590,97 @@ src="https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDV
 
   </div>
 
-
   <script>
     "use strict";
 
-    /* =========================================================
-       CONFIGURATION
-       ========================================================= */
-
     const WMS_CONFIG = {
-
-      // URL Google Apps Script
       WMS_URL:
         "https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDVNonVPzbzSlkzTKZmuWTJYeK-hN4ay56YLw/exec",
 
-      // Maksimal waktu menunggu sebelum dianggap bermasalah
-      LOAD_TIMEOUT: 30000,
-
-      // Delay sebelum loading screen ditutup
+      LOAD_TIMEOUT: 45000,
       HIDE_DELAY: 300
-
     };
 
+    const frame = document.getElementById("wmsFrame");
+    const loading = document.getElementById("loading");
+    const errorScreen = document.getElementById("errorScreen");
 
-    /* =========================================================
-       DOM
-       ========================================================= */
-
-    const frame =
-      document.getElementById("wmsFrame");
-
-    const loading =
-      document.getElementById("loading");
-
-    const errorScreen =
-      document.getElementById("errorScreen");
-
-    const retryButton =
-      document.getElementById("retryButton");
-
-    const openButton =
-      document.getElementById("openButton");
-
-
-    /* =========================================================
-       STATE
-       ========================================================= */
+    const retryButton = document.getElementById("retryButton");
+    const openButton = document.getElementById("openButton");
 
     let loaded = false;
     let timeoutId = null;
+    let loadVersion = 0;
 
+    function showLoading() {
+      loading.classList.remove("hidden");
+      frame.classList.remove("loaded");
+    }
 
-    /* =========================================================
-       INITIALIZE
-       ========================================================= */
+    function hideLoading() {
+      loading.classList.add("hidden");
+    }
+
+    function showError() {
+      hideLoading();
+      errorScreen.classList.add("show");
+    }
+
+    function hideError() {
+      errorScreen.classList.remove("show");
+    }
+
+    function startTimeout(version) {
+      clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(function() {
+        if (!loaded && version === loadVersion) {
+          showError();
+        }
+      }, WMS_CONFIG.LOAD_TIMEOUT);
+    }
 
     function initializeWMS() {
-
+      loadVersion++;
       loaded = false;
 
       hideError();
-
       showLoading();
 
-      clearTimeout(timeoutId);
-
-      timeoutId = setTimeout(function () {
-
-        if (!loaded) {
-
-          showError();
-
-        }
-
-      }, WMS_CONFIG.LOAD_TIMEOUT);
-
+      startTimeout(loadVersion);
     }
 
-
-    /* =========================================================
-       FRAME LOADED
-       ========================================================= */
-
-    frame.addEventListener("load", function () {
-
+    frame.addEventListener("load", function() {
       loaded = true;
 
       clearTimeout(timeoutId);
 
       frame.classList.add("loaded");
 
-      setTimeout(function () {
-
-        loading.classList.add("hidden");
-
-      }, WMS_CONFIG.HIDE_DELAY);
-
-    });
-
-
-    /* =========================================================
-       FRAME ERROR
-       ========================================================= */
-
-    frame.addEventListener("error", function () {
-
-      loaded = false;
-
-      clearTimeout(timeoutId);
-
-      showError();
-
-    });
-
-
-    /* =========================================================
-       SHOW LOADING
-       ========================================================= */
-
-    function showLoading() {
-
-      loading.classList.remove("hidden");
-
-      frame.classList.remove("loaded");
-
-    }
-
-
-    /* =========================================================
-       SHOW ERROR
-       ========================================================= */
-
-    function showError() {
-
-      loading.classList.add("hidden");
-
-      errorScreen.classList.add("show");
-
-    }
-
-
-    /* =========================================================
-       HIDE ERROR
-       ========================================================= */
-
-    function hideError() {
-
-      errorScreen.classList.remove("show");
-
-    }
-
-
-    /* =========================================================
-       RELOAD WMS
-       ========================================================= */
-
-    function reloadWMS() {
-
       hideError();
 
-      showLoading();
+      setTimeout(function() {
+        hideLoading();
+      }, WMS_CONFIG.HIDE_DELAY);
+    });
 
+    frame.addEventListener("error", function() {
+      loaded = false;
+      clearTimeout(timeoutId);
+      showError();
+    });
+
+    function reloadWMS() {
+      loadVersion++;
       loaded = false;
 
-      clearTimeout(timeoutId);
+      hideError();
+      showLoading();
 
-      /*
-       * Menambahkan timestamp agar browser tidak memakai
-       * cache iframe lama.
-       */
+      const version = loadVersion;
 
       const separator =
-        WMS_CONFIG.WMS_URL.includes("?")
-          ? "&"
-          : "?";
+        WMS_CONFIG.WMS_URL.includes("?") ? "&" : "?";
 
       frame.src =
         WMS_CONFIG.WMS_URL +
@@ -818,114 +688,32 @@ src="https://script.google.com/macros/s/AKfycbwxH3VnAz0s2oZhGAUDtqap40F7knUq4pDV
         "_wms_reload=" +
         Date.now();
 
-      timeoutId = setTimeout(function () {
-
-        if (!loaded) {
-
-          showError();
-
-        }
-
-      }, WMS_CONFIG.LOAD_TIMEOUT);
-
+      startTimeout(version);
     }
 
-
-    /* =========================================================
-       OPEN WMS DIRECTLY
-       ========================================================= */
-
     function openWMS() {
-
       window.open(
         WMS_CONFIG.WMS_URL,
         "_blank",
         "noopener,noreferrer"
       );
-
     }
 
+    retryButton.addEventListener("click", reloadWMS);
+    openButton.addEventListener("click", openWMS);
 
-    /* =========================================================
-       BUTTON EVENTS
-       ========================================================= */
+    window.addEventListener("offline", function() {
+      showError();
+    });
 
-    retryButton.addEventListener(
-      "click",
-      reloadWMS
-    );
-
-    openButton.addEventListener(
-      "click",
-      openWMS
-    );
-
-
-    /* =========================================================
-       ONLINE / OFFLINE DETECTION
-       ========================================================= */
-
-    window.addEventListener(
-      "offline",
-      function () {
-
-        if (!loaded) {
-          showError();
-        }
-
+    window.addEventListener("online", function() {
+      if (!loaded) {
+        reloadWMS();
       }
-    );
-
-
-    window.addEventListener(
-      "online",
-      function () {
-
-        if (!loaded) {
-          reloadWMS();
-        }
-
-      }
-    );
-
-
-    /* =========================================================
-       KEYBOARD
-       ========================================================= */
-
-    document.addEventListener(
-      "keydown",
-      function (event) {
-
-        /*
-         * Jangan memblokir F11.
-         * Browser tetap mengatur fullscreen.
-         */
-
-        if (
-          event.key === "F5" &&
-          event.ctrlKey === false
-        ) {
-
-          /*
-           * F5 tetap boleh dipakai untuk refresh.
-           * Tidak dicegat.
-           */
-
-        }
-
-      }
-    );
-
-
-    /* =========================================================
-       START
-       ========================================================= */
+    });
 
     initializeWMS();
-
   </script>
 
 </body>
 </html>
-```
